@@ -1,0 +1,6 @@
+setup.py
+agriculture_ai_project.egg-info/PKG-INFO
+agriculture_ai_project.egg-info/SOURCES.txt
+agriculture_ai_project.egg-info/dependency_links.txt
+agriculture_ai_project.egg-info/requires.txt
+agriculture_ai_project.egg-info/top_level.txt

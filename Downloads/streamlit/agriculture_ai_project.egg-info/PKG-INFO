@@ -1,0 +1,13 @@
+Metadata-Version: 2.1
+Name: agriculture_ai_project
+Version: 0.1
+Summary: Projet AI pour la prédiction agricole
+Author: Accel-2024
+Requires-Python: >=3.6
+Requires-Dist: pandas
+Requires-Dist: numpy
+Requires-Dist: scikit-learn
+Requires-Dist: matplotlib
+Requires-Dist: seaborn
+Requires-Dist: plotly
+Requires-Dist: joblib
