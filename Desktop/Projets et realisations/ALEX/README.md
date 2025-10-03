@@ -246,6 +246,22 @@ Le serveur démarre sur `http://127.0.0.1:8504`
 
 ### 💡 Exemples d'Utilisation
 
+#### 🤝 Salutations et Aide
+```
+🧑 Utilisateur: "Salut"
+
+🤖 ALEX: 👋 Salut ! Je suis ALEX, votre assistant IA d'Accel Tech !
+
+        🤖 Je suis là pour vous aider à explorer et analyser vos documents 
+        de façon conversationnelle.
+
+        💡 Comment m'utiliser :
+        • Posez-moi des questions sur le contenu de vos documents
+        • Je peux analyser, résumer et extraire des informations
+        • J'ai accès aux documents dans votre dossier surveillé
+```
+
+#### 📚 Recherche dans Documents
 ```
 🧑 Utilisateur: "Quelles sont les principales mesures de détection de fraude ?"
 

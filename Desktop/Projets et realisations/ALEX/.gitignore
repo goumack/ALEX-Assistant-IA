@@ -1,14 +1,9 @@
+# Projet ALEX - Assistant IA
 # Environnements virtuels Python
 .venv/
 venv/
 ENV/
 env/
-.env.local
-.env.development
-.env.production
-
-# Variables d'environnement sensibles
-.env
 
 # Base de données et cache
 chroma_db/
@@ -19,87 +14,27 @@ __pycache__/
 *.pyc
 *.pyo
 *.pyd
-.Python
 
 # Logs
 *.log
 logs/
-*.out
 
 # Fichiers temporaires
 *.tmp
 *.temp
 .DS_Store
 Thumbs.db
-desktop.ini
 
-# IDE et éditeurs
+# IDE
 .vscode/
 .idea/
-*.swp
-*.swo
-*~
 
 # Jupyter Notebook
 .ipynb_checkpoints
 
-# Modèles et données sensibles
-models/
-*.pkl
-*.h5
-*.onnx
-*.pt
-*.pth
-
-# Documents utilisateur (ne pas committer les vrais docs)
-documents/
-DETECTION_FRAUDE/
-*.pdf
-*.docx
-*.odt
-*.txt
-
-# Sauvegardes
+# Documents privés
 backup/
-*.backup
-*.bak
+documents/
 
-# Fichiers volumineux
-*.tar.gz
-*.zip
-*.rar
-
-# Système Windows
-*.lnk
-.vs/
-
-# Node.js (si utilisé)
-node_modules/
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-
-# Fichiers de build
-build/
-dist/
-*.exe
-*.msi
-
-# Cache pip
-pip-log.txt
-pip-delete-this-directory.txt
-
-# Tests
-.coverage
-.pytest_cache/
-.tox/
-
-# Documentation générée
-docs/_build/
-site/
-
-# Secrets et clés
-*.key
-*.pem
-secrets.yaml
-secrets.json
+# Ne pas inclure les fichiers du système parent
+../../../*
