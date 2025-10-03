@@ -712,70 +712,70 @@ class ALEXProClient:
         
         # Réponses aux salutations
         if any(greeting in message_lower for greeting in ['salut', 'bonjour', 'hello', 'hi', 'hey', 'coucou']):
-            return """👋 **Salut ! Je suis ALEX, votre assistant IA d'Accel Tech !** 
+            return """Salut ! Je suis ALEX, votre assistant IA d'Accel Tech !
 
-🤖 Je suis là pour vous aider à explorer et analyser vos documents de façon conversationnelle.
+Je suis là pour vous aider à explorer et analyser vos documents de façon conversationnelle.
 
-💡 **Comment m'utiliser :**
+Comment m'utiliser :
 • Posez-moi des questions sur le contenu de vos documents
 • Je peux analyser, résumer et extraire des informations
 • J'ai accès aux documents dans votre dossier surveillé
 
-🚀 **Exemples de questions :**
+Exemples de questions :
 • "Quelles sont les mesures de détection de fraude ?"
 • "Résume-moi le document sur la stratégie"
 • "Trouve les informations sur les recettes budgétaires"
 
-N'hésitez pas à me poser vos questions ! 😊"""
+N'hésitez pas à me poser vos questions !"""
 
         # Questions sur ALEX
         elif any(q in message_lower for q in ['qui es-tu', 'présente-toi', 'tu es qui']):
-            return """🤖 **Je suis ALEX (Assistant Learning and eXpert)** 
+            return """Je suis ALEX (Assistant Learning and eXpert)
 
-Développé par **Accel Tech**, je suis un assistant IA spécialisé dans l'analyse de documents avec la technologie RAG (Retrieval-Augmented Generation).
+Développé par Accel Tech, je suis un assistant IA spécialisé dans l'analyse de documents avec la technologie RAG (Retrieval-Augmented Generation).
 
-🎯 **Mes capacités :**
+Mes capacités :
 • Analyse et recherche dans vos documents PDF, DOCX, TXT, ODT
 • Réponses contextuelles basées sur vos fichiers
 • Surveillance automatique des nouveaux documents
 • Interface moderne et intuitive
 
-🔍 **Ma technologie :**
+Ma technologie :
 • Modèle Mistral 7B pour la génération de réponses
 • ChromaDB pour la recherche vectorielle
 • Embeddings Nomic pour la compréhension sémantique
 
-💡 Posez-moi des questions spécifiques sur vos documents !"""
+Posez-moi des questions spécifiques sur vos documents !"""
 
         # Questions d'aide
         elif any(q in message_lower for q in ['aide', 'help', 'comment']):
-            return """📋 **Guide d'utilisation d'ALEX**
+            return """Guide d'utilisation d'ALEX
 
-🎯 **Comment poser des questions :**
+Comment poser des questions :
 • Soyez spécifique : "Quels sont les indicateurs de fraude ?"
 • Utilisez des mots-clés pertinents de vos documents
 • Demandez des analyses : "Résume le chapitre sur..."
 
-🔍 **Types de recherches possibles :**
+Types de recherches possibles :
 • Recherche d'informations précises
 • Résumés de documents ou sections
 • Comparaisons entre différents documents
 • Extraction de données chiffrées
 
-⚡ **Astuces pour de meilleures réponses :**
+Astuces pour de meilleures réponses :
 • Utilisez le vocabulaire de vos domaines (finance, juridique, etc.)
 • Posez des questions ouvertes pour plus de détails
 • Précisez le document si vous en cherchez un en particulier
 
-🚀 Essayez maintenant avec une question sur vos documents !"""
+Essayez maintenant avec une question sur vos documents !"""
 
         # Réponse par défaut
         else:
-            return """👋 Salut ! Je suis ALEX, votre assistant IA personnel.
+            return """Salut ! Je suis ALEX, votre assistant IA personnel.
 
-💡 Posez-moi des questions sur vos documents et je vous aiderai à trouver les informations que vous cherchez !
+Posez-moi des questions sur vos documents et je vous aiderai à trouver les informations que vous cherchez !
 
-🎯 Exemple: "Quels sont les principaux points abordés dans mes documents ?" """
+Exemple: "Quels sont les principaux points abordés dans mes documents ?" """
 
     def chat(self, message: str) -> str:
         """Génère une réponse de chat basée UNIQUEMENT sur les documents indexés"""
