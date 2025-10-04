@@ -119,6 +119,126 @@ graph TB
 - **Ollama** : Runtime pour modèles LLM
 - **Threading** : Traitement asynchrone en arrière-plan
 
+## 🌐 Architecture Web Complète
+
+ALEX est une **application web full-stack** moderne combinant HTML, CSS, JavaScript et Flask :
+
+### 🎨 **Frontend - Interface Utilisateur (HTML/CSS/JavaScript)**
+
+```html
+<!-- Structure HTML5 moderne avec widget de chat -->
+<div class="chat-widget">
+  <div class="chat-header">
+    <h1>ALEX by Accel Tech</h1>
+    <p>Modernize. Innovate.</p>
+  </div>
+  <div class="chat-container"><!-- Messages en temps réel --></div>
+  <div class="chat-input-section"><!-- Interface de saisie --></div>
+</div>
+```
+
+```css
+/* Design CSS3 responsive avec animations professionnelles */
+.chat-widget {
+    position: fixed;
+    bottom: 150px;
+    right: 20px;
+    width: 380px;
+    height: 600px;
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+    animation: slideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+```
+
+```javascript
+// JavaScript moderne pour interactions en temps réel
+async function sendMessage() {
+    const response = await fetch('/chat', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({message: userMessage})
+    });
+    const data = await response.json();
+    displayResponse(data.response);
+}
+```
+
+### ⚙️ **Backend - Serveur Flask (Python)**
+
+```python
+# Application Flask avec API REST complète
+from flask import Flask, render_template_string, request, jsonify
+
+app = Flask(__name__)
+
+# Routes principales
+@app.route('/')                           # Interface HTML/CSS/JS
+@app.route('/chat', methods=['POST'])     # API Conversation IA
+@app.route('/status')                     # API Statut indexation
+@app.route('/force_check_new')            # API Vérification manuelle
+@app.route('/reindex', methods=['POST'])  # API Réindexation
+
+# Logique métier intégrée
+class ALEXProClient:
+    def chat(self, message):              # Intelligence conversationnelle
+    def search_context(self, query):      # Recherche vectorielle
+    def index_file(self, file_path):      # Indexation documents
+```
+
+### 📊 **Structure du Projet Web**
+
+```
+alex/
+├── taipy-version/
+│   └── app_taipy.py              # 🚀 APPLICATION WEB COMPLÈTE
+│       ├── HTML_TEMPLATE         # 🎨 Interface utilisateur complète
+│       │   ├── HTML5 structure
+│       │   ├── CSS3 responsive design
+│       │   └── JavaScript interactions
+│       ├── Flask Routes          # ⚙️ API Backend
+│       │   ├── @app.route('/')
+│       │   ├── @app.route('/chat')
+│       │   └── @app.route('/status')
+│       ├── ALEXProClient        # 🧠 Intelligence IA/RAG
+│       │   ├── Mistral 7B integration
+│       │   ├── ChromaDB management
+│       │   └── Document processing
+│       └── File Monitoring       # 📁 Surveillance automatique
+├── chroma_db/                    # 💾 Base vectorielle
+├── documents/                    # 📄 Documents à analyser
+└── .env                          # ⚙️ Configuration
+```
+
+### 🔄 **Communication Full-Stack**
+
+```mermaid
+graph LR
+    A[🎨 Frontend<br/>HTML/CSS/JS] <-->|AJAX/Fetch| B[⚙️ Flask API<br/>Python Backend]
+    B <-->|Queries| C[🧠 Mistral LLM<br/>via Ollama]
+    B <-->|Vectors| D[💾 ChromaDB<br/>Vector Database]
+    B <-->|Files| E[📁 File System<br/>Document Watch]
+```
+
+### 🌟 **Caractéristiques Techniques**
+
+| **Couche** | **Technologies** | **Fonctionnalités** |
+|------------|------------------|---------------------|
+| **Frontend** | HTML5, CSS3, JS | Widget chat moderne, animations, responsive |
+| **Backend** | Flask, Python | API REST, logique IA, gestion sessions |
+| **IA Engine** | Mistral 7B, Ollama | Génération réponses, RAG, embeddings |
+| **Data Layer** | ChromaDB, Vector DB | Recherche sémantique, indexation |
+| **File System** | Watchdog, Threading | Surveillance automatique, traitement async |
+
+### 🚀 **Avantages Architecture Web**
+
+- ✅ **Application autonome** : Tout-en-un (frontend + backend + IA)
+- ✅ **Interface moderne** : Widget professionnel comme les sites web actuels  
+- ✅ **API REST complète** : Intégrable dans d'autres applications
+- ✅ **Responsive design** : Compatible mobile et desktop
+- ✅ **Déploiement simple** : Un seul fichier Python à lancer
+
 ## 🚀 Installation
 
 ### 📋 Prérequis
@@ -401,7 +521,114 @@ ALEX/
 @media (max-width: 480px) { ... }
 ```
 
-## 🚀 Déploiement
+## � Intégration dans d'autres Sites Web
+
+ALEX peut être facilement intégré dans des sites web existants grâce à son architecture web complète :
+
+### 📋 **Option 1: Intégration par iframe (Recommandée)**
+
+```jsx
+// Composant React pour intégrer ALEX
+import React, { useState } from 'react';
+
+const AlexWidget = () => {
+  const [isOpen, setIsOpen] = useState(false);
+
+  return (
+    <>
+      {/* Bouton flottant */}
+      <button 
+        onClick={() => setIsOpen(!isOpen)}
+        style={{
+          position: 'fixed',
+          bottom: '20px',
+          right: '20px',
+          width: '60px',
+          height: '60px',
+          borderRadius: '50%',
+          background: 'linear-gradient(135deg, #1e3a8a, #2563eb)',
+          border: 'none',
+          color: 'white',
+          fontSize: '24px',
+          cursor: 'pointer',
+          zIndex: 1000
+        }}
+      >
+        {isOpen ? '✕' : '💬'}
+      </button>
+
+      {/* Widget ALEX complet */}
+      {isOpen && (
+        <iframe
+          src="http://127.0.0.1:8504"
+          style={{
+            position: 'fixed',
+            bottom: '90px',
+            right: '20px',
+            width: '380px',
+            height: '600px',
+            border: 'none',
+            borderRadius: '20px',
+            boxShadow: '0 20px 40px rgba(0, 0, 0, 0.15)',
+            zIndex: 999
+          }}
+        />
+      )}
+    </>
+  );
+};
+```
+
+### 🌐 **Option 2: Intégration API native**
+
+```javascript
+// Utilisation directe de l'API ALEX
+async function chatWithAlex(message) {
+    const response = await fetch('http://127.0.0.1:8504/chat', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({message: message})
+    });
+    
+    const data = await response.json();
+    return data.response;
+}
+
+// Exemple d'utilisation
+const response = await chatWithAlex("Comment déployer un modèle sur OpenShift AI ?");
+console.log(response);
+```
+
+### ⚙️ **Configuration CORS automatique**
+
+ALEX inclut la configuration CORS pour permettre l'intégration cross-origin :
+
+```python
+# Configuration automatique dans app_taipy.py
+@app.after_request
+def after_request(response):
+    response.headers.add('Access-Control-Allow-Origin', '*')
+    response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
+    response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
+    return response
+```
+
+### 📱 **Avantages de l'intégration**
+
+- ✅ **Plug & Play** : Intégration en 5 minutes
+- ✅ **Design conservé** : Toutes les fonctionnalités et animations
+- ✅ **Multi-framework** : Compatible React, Vue, Angular, HTML simple
+- ✅ **Responsive** : S'adapte automatiquement aux écrans
+- ✅ **Maintenance simple** : Aucun code à dupliquer
+
+### 🚀 **Étapes d'intégration**
+
+1. **Démarrez ALEX** : `python app_taipy.py`
+2. **Copiez le composant** dans votre projet
+3. **Importez et utilisez** : `<AlexWidget />`
+4. **Testez** : Le widget apparaît en bas à droite
+
+## �🚀 Déploiement
 
 ### 🐳 Docker Production
 

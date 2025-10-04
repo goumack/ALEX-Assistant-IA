@@ -603,49 +603,31 @@ class ALEXProClient:
                         self.index_file(str(file_path))
                         count += 1
 
-    def generate_embeddings(self, text: str, max_retries: int = 2) -> List[float]:
-        """Génère des embeddings avec optimisations et retry"""
-        for attempt in range(max_retries + 1):
-            try:
-                payload = {
-                    "model": self.config.OLLAMA_EMBEDDING_MODEL,
-                    "prompt": text
-                }
-                
-                # Timeout réduit et session réutilisable
-                if not hasattr(self, '_session'):
-                    self._session = requests.Session()
-                    self._session.headers.update({'Connection': 'keep-alive'})
-                
-                # Timeout progressif selon l'essai
-                timeout = 30 + (attempt * 15)  # 30s, 45s, 60s
-                logger.info(f"🔄 Tentative {attempt + 1}/{max_retries + 1} embedding (timeout: {timeout}s)")
-                
-                response = self._session.post(
-                    f"{self.config.OLLAMA_BASE_URL}/api/embeddings",
-                    json=payload,
-                    timeout=timeout
-                )
-                
-                if response.status_code == 200:
-                    logger.info(f"✅ Embedding généré avec succès (tentative {attempt + 1})")
-                    return response.json()['embedding']
-                else:
-                    logger.warning(f"⚠️ Réponse HTTP {response.status_code} (tentative {attempt + 1})")
-                    
-            except requests.exceptions.Timeout as e:
-                logger.warning(f"⏱️ Timeout tentative {attempt + 1}/{max_retries + 1}: {e}")
-                if attempt < max_retries:
-                    time.sleep(2)  # Pause avant retry
-                    continue
-            except Exception as e:
-                logger.error(f"❌ Erreur embedding (tentative {attempt + 1}): {e}")
-                if attempt < max_retries:
-                    time.sleep(2)
-                    continue
-        
-        logger.error(f"💥 Échec génération embedding après {max_retries + 1} tentatives")
-        return []
+    def generate_embeddings(self, text: str) -> List[float]:
+        """Génère des embeddings avec optimisations"""
+        try:
+            payload = {
+                "model": self.config.OLLAMA_EMBEDDING_MODEL,
+                "prompt": text
+            }
+            
+            # Timeout réduit et session réutilisable
+            if not hasattr(self, '_session'):
+                self._session = requests.Session()
+                self._session.headers.update({'Connection': 'keep-alive'})
+            
+            response = self._session.post(
+                f"{self.config.OLLAMA_BASE_URL}/api/embeddings",
+                json=payload,
+                timeout=15  # Timeout augmenté pour OpenShift
+            )
+            
+            if response.status_code == 200:
+                return response.json()['embedding']
+            return []
+        except Exception as e:
+            logger.error(f"Erreur embedding: {e}")
+            return []
     
     def search_context(self, query: str, limit: int = 5) -> str:
         """Recherche le contexte dans les documents indexés"""
@@ -931,7 +913,7 @@ Réponse:"""
                 # Vérifier si le contexte est pertinent
                 keyword_found = any(kw in context_lower for kw in question_keywords if len(kw) > 3)
                 
-                if keyword_found or "srmt" in context_lower or "stratégie" in context_lower or "openshift" in context_lower or "deploie" in context_lower:
+                if keyword_found or "srmt" in context_lower or "stratégie" in context_lower:
                     prompt = f"""INSTRUCTION ABSOLUE: Tu DOIS répondre UNIQUEMENT en utilisant les informations du CONTEXTE ci-dessous.
 
 CONTEXTE DES DOCUMENTS:
@@ -942,32 +924,22 @@ QUESTION: {message}
 RÉPONSE: Basez votre réponse EXCLUSIVEMENT sur le contexte ci-dessus. Citez les sources."""
                 else:
                     # Si le contexte ne semble pas pertinent, forcer une recherche plus large
-                    return f"""Le contexte trouvé ne semble pas correspondre directement à votre question sur "{message}".
+                    return f"""  Le contexte trouvé ne semble pas correspondre à votre question sur "{message}".
 
 🔍 Contexte trouvé: {context[:200]}...
 
-💡 **Suggestions :**
-- Reformulez votre question avec des mots-clés plus spécifiques
-- Utilisez le bouton "📁 Vérifier" pour réindexer les nouveaux documents
-- Essayez des termes comme "déploiement", "OpenShift", "modèle IA"
-
-🤖 Si le problème persiste, cela peut être dû à une connexion lente avec le serveur IA."""
+💡 Essayez de reformuler votre question ou utilisez des mots-clés plus spécifiques."""
             else:
-                return f"""Cette information n'est pas disponible dans les documents indexés actuellement.
+                return f"""  Cette information n'est pas disponible dans les documents indexés.
 
-📚 **Documents disponibles :** DEPLOIEMENT MODELE FRAUDE, Rapport DGD, Documentation technique
+   Documents disponibles: DEPLOIEMENT MODELE FRAUDE, Rapport DGD, Documentation technique, etc.
 
-💡 **Essayez des questions comme :**
+💡 Essayez des questions comme:
 - "Comment déployer un modèle de fraude sur OpenShift AI ?"
 - "Que dit le rapport DGD ?"
 - "Quelle est la documentation technique disponible ?"
 
-⚠️ **Si vous avez ajouté de nouveaux documents :**
-- Cliquez sur le bouton "📁 Vérifier" pour forcer l'indexation
-- Attendez quelques secondes que l'indexation se termine
-
-🔧 **Problème de connexion ?** 
-Le serveur IA peut être temporairement lent. Réessayez dans quelques instants."""
+🔄 Si vous pensez que cette information devrait être disponible, cliquez sur 'Indexer dossier fraude' pour réindexer."""
             
             # Debug: Logger le prompt et le contexte
             logger.info(f"   PROMPT ENVOYÉ À OLLAMA:")
@@ -988,7 +960,7 @@ Le serveur IA peut être temporairement lent. Réessayez dans quelques instants.
             response = requests.post(
                 f"{self.config.OLLAMA_BASE_URL}/api/generate",
                 json=payload,
-                timeout=90  # Timeout augmenté pour les requêtes longues
+                timeout=60
             )
             
             if response.status_code == 200:
@@ -1467,6 +1439,9 @@ HTML_TEMPLATE = """
                     <button class="send-btn" id="sendBtn" onclick="sendMessage()">
                         Envoyer
                     </button>
+                    <button class="send-btn" onclick="forceCheckFiles()" style="margin-left: 5px; background: #dc3545;">
+                        📁 Vérifier
+                    </button>
                 </div>
             </div>
         </div>
@@ -1620,6 +1595,27 @@ HTML_TEMPLATE = """
             }, speed);
         }
 
+        // Fonction pour forcer la vérification des nouveaux fichiers
+        async function forceCheckFiles() {
+            try {
+                const response = await fetch('/force_check_new', {
+                    method: 'POST'
+                });
+                const data = await response.json();
+                
+                // Ajouter un message dans le chat
+                const chatContainer = document.getElementById('chatContainer');
+                const systemMessage = document.createElement('div');
+                systemMessage.className = 'message assistant-message';
+                systemMessage.innerHTML = `<strong>🔄 Vérification terminée:</strong><br>${data.message}`;
+                chatContainer.appendChild(systemMessage);
+                chatContainer.scrollTop = chatContainer.scrollHeight;
+                
+            } catch (error) {
+                console.error('Erreur vérification fichiers:', error);
+            }
+        }
+
         // Initialisation au chargement
         window.onload = function() {
             addMessageEffects();
@@ -1688,25 +1684,6 @@ def chat():
     except Exception as e:
         logger.error(f"Erreur chat endpoint: {e}")
         return jsonify({'response': 'Une erreur s\'est produite.'}), 500
-
-@app.route('/health', methods=['GET'])
-def health_check():
-    """Vérifie la santé de la connexion Ollama"""
-    try:
-        # Test rapide de connexion Ollama
-        test_response = requests.get(
-            f"{alex_client.config.OLLAMA_BASE_URL}/api/tags",
-            timeout=5
-        )
-        ollama_status = "🟢 Connecté" if test_response.status_code == 200 else "🟡 Réponse inattendue"
-    except:
-        ollama_status = "🔴 Déconnecté"
-    
-    return jsonify({
-        'ollama_status': ollama_status,
-        'server_url': alex_client.config.OLLAMA_BASE_URL,
-        'timestamp': time.strftime("%Y-%m-%d %H:%M:%S")
-    })
 
 @app.route('/status', methods=['GET'])
 def get_status():
